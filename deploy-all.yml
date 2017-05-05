@@ -1,0 +1,23 @@
+- name: setup python2
+  hosts: kmp-server
+  become: true
+  gather_facts: no
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - setup: # aka gather_facts
+
+- name: Deploy common role
+  hosts: all
+  roles:
+    - common
+
+- name: Deploy master role
+  hosts: kube-master
+  roles:
+    - kube-master
+
+- name: Deploy node role
+  hosts: kube-nodes
+  roles:
+    - kube-nodes

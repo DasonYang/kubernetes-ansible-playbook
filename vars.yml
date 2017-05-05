@@ -1,0 +1,5 @@
+---
+
+kubernetes_master_ip: 192.168.33.11
+kubernetes_master_port: 6443
+kubeadm_token:        8c2350.f55343444a6ffc46

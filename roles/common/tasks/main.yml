@@ -1,0 +1,33 @@
+---
+- name: Set environment
+  lineinfile: dest=/etc/environment line="LC_ALL=C"
+  sudo: True
+  tags: set_env
+
+- name: Export env
+  shell: export LC_ALL="C"
+
+- name: Add Kubernetes apt key
+  become: yes
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+
+- name: Add repo
+  become: yes
+  apt_repository:
+    repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+
+- name: Install packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - docker-engine
+    - kubelet
+    - kubeadm
+    - kubectl
+    - kubernetes-cni

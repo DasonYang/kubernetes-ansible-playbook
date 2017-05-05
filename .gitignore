@@ -1,0 +1,9 @@
+# Ansible ignore files
+.retry
+ansible.cfg
+
+# Vagrant files
+.vargant/
+.bak
+.old
+

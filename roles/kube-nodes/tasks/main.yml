@@ -1,0 +1,4 @@
+---
+- name: Join Kubernetes Cluster
+  become: yes
+  shell: "kubeadm join --token={{ kubeadm_token }} {{ kubernetes_master_ip }}:{{kubernetes_master_port}}"

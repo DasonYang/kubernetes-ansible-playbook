@@ -1,0 +1,13 @@
+[all]
+master ansible_ssh_host=192.168.33.11 ansible_ssh_port=22
+node0 ansible_ssh_host=192.168.33.20 ansible_ssh_port=22
+node1 ansible_ssh_host=192.168.33.21 ansible_ssh_port=22
+node2 ansible_ssh_host=192.168.33.22 ansible_ssh_port=22
+
+[kube-master]
+master
+
+[kube-nodes]
+node0
+node1
+node2
