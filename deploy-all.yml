@@ -1,6 +1,6 @@
 - name: setup python2
-  hosts: kmp-server
-  become: true
+  hosts: all
+  become: yes
   gather_facts: no
   pre_tasks:
     - name: Install python for Ansible
