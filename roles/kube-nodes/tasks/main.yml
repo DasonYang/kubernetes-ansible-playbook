@@ -1,4 +1,8 @@
 ---
+- name: Show sha
+  debug:
+    msg: "{{ hostvars['master']['kubeadm_join'][0] }}"
 - name: Join Kubernetes Cluster
   become: yes
-  shell: "kubeadm join --token={{ kubeadm_token }} {{ kubernetes_master_ip }}:{{kubernetes_master_port}}"
+  shell: "{{ hostvars['master']['kubeadm_join'][0] }} --ignore-preflight-errors=Swap"
+  

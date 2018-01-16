@@ -1,18 +1,32 @@
 ---
 - name:    Initialise Kubernetes Cluster
-  become:  true
-  shell:   kubeadm init --token={{ kubeadm_token }} --apiserver-advertise-address={{ kubernetes_master_ip }} --pod-network-cidr 10.244.0.0/16 --kubernetes-version v1.6.2
+  become:  yes
+  shell:   kubeadm init --apiserver-advertise-address={{ kubernetes_master_ip }} --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.9.1 --ignore-preflight-errors=Swap
+  register: results
+
+- debug:
+    msg: "result = {{ results.stdout }}"
+
+- local_action: copy content="{{ results.stdout }}" dest="./kubeadm_auth.txt"
+
+- set_fact:
+    kubeadm_join: "{{ results.stdout | regex_search(regexp,'\\1') }}"
+  vars:
+    regexp: "(kubeadm join.*)"
+
+- debug:
+    var: kubeadm_join
 
 - name: Copy kubernetes admin cfg
   command: cp /etc/kubernetes/admin.conf {{ ansible_env.HOME}}/
-  become: true
+  become: yes
 
 - name: Change admin cfg owner
   file:
     path: "{{ ansible_env.HOME}}/admin.conf"
     owner: "{{ansible_user_uid}}"
     group: "{{ansible_user_gid}}"
-  become: true
+  become: yes
 
 - name: Add env to bashrc
   lineinfile:
@@ -22,17 +36,6 @@
 
 - name: Export env
   shell: "export KUBECONFIG={{ansible_env.HOME}}/admin.conf"
-
-- name: Get Flannel RBAC
-  get_url: 
-    url: https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel-rbac.yml?raw=true
-    dest: "{{ansible_env.HOME}}/kube-flannel-rbac.yml"
-    mode: 0777
-
-- name:    Install Flannel RBAC
-  environment:
-    KUBECONFIG: "{{ansible_env.HOME}}/admin.conf"
-  shell:   "kubectl create -f {{ansible_env.HOME}}/kube-flannel-rbac.yml"
 
 - name: Get Flannel
   get_url: 

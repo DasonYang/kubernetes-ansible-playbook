@@ -2,9 +2,10 @@
 Ansible-playbook to deployment kubernetes via vagrant
 
 # Package version
-- kubeadm 1.6.2
-- vagrant 1.9.4
-- virtualbox 5.1.22
+- Ubuntu 16.04
+- kubeadm 1.9.1
+- vagrant 2.0.1
+- virtualbox 5.2.2 r119230
 
 # Install
-ansible-playbook -i hosts deploy-all.yml -e @vars.yml
+ansible-playbook -i hosts.yml deploy-all.yml -e @vars.yml
